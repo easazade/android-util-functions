@@ -1,0 +1,2 @@
+include ':app', ':android-utils'
+rootProject.name='Android-Utility-Functions'
