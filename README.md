@@ -1,6 +1,6 @@
 # android-util-functions  
   
-[![](https://jitpack.io/v/easazade/android-util-functions.svg)](https://jitpack.io/#easazade/android-util-functions)  
+[![](https://jitpack.io/v/easazade/android-util-functions.svg)](https://jitpack.io/#easazade/android-util-functions)
   
 <p>this is a library containing utility functions (many of them kotlin extension functions) and helper  
 classes that I use in my apps to remove boilerplate code and make application code more concise and readable</p>  
