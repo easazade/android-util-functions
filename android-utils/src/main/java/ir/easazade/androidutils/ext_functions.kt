@@ -1,5 +1,6 @@
 package ir.easazade.androidutils
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Typeface
@@ -9,6 +10,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.FragmentActivity
 import ir.easazade.androidutils.classes.Quadruple
 import ir.huri.jcal.JalaliCalendar
 import timber.log.Timber
@@ -47,7 +49,7 @@ fun Number.localNumbers(): String = try {
 /**
  * @return a string format of year/month/day of the timestamp with numbers being in local format
  */
-fun Timestamp._formatLocale(): String {
+fun Timestamp._dateHumanReadableformatLocale(): String {
   val calendar = GregorianCalendar()
   calendar.time = this
   val month = (calendar.get(Calendar.MONTH) + 1).localNumbers()
@@ -108,6 +110,19 @@ fun Toolbar._setDefaultTypeface(typeface: Typeface) {
       Timber.d("view is textview")
       view.typeface = typeface
     }
+  }
+}
+
+/**
+ * hides keyboard
+ */
+fun FragmentActivity._hideKeyboard() {
+  try {
+    val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    val focus = currentFocus?.windowToken
+    inputMethodManager.hideSoftInputFromWindow(focus, 0)
+  } catch (e: Exception) {
+    Timber.e(e, "exception when hiding soft keyboard")
   }
 }
 

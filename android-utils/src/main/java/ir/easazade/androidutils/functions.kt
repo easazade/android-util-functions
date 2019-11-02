@@ -92,10 +92,16 @@ fun _launchBrowserAndOpenUrl(activity: FragmentActivity, url: String) {
   }
 }
 
+/**
+ * converts pixels to density pixels
+ */
 fun _px2dp(px: Float, context: Context): Float {
   return px / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 }
 
+/**
+ * converts density pixels to pixels
+ */
 fun _dp2px(dp: Float, context: Context): Float {
   return dp * (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 }

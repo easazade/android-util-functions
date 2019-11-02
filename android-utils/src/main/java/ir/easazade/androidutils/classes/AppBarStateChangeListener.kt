@@ -1,40 +1,44 @@
 package ir.easazade.androidutils.classes
 
 import com.google.android.material.appbar.AppBarLayout
+import ir.easazade.androidutils.classes.AppBarStateChangeListener.State.COLLAPSED
+import ir.easazade.androidutils.classes.AppBarStateChangeListener.State.EXPANDED
+import ir.easazade.androidutils.classes.AppBarStateChangeListener.State.IDLE
+import kotlin.math.abs
 
+/**
+ * this class
+ */
 class AppBarStateChangeListener(
-  private val onStateChanged: (appBarLayout: AppBarLayout, state: Int) -> Unit
+  private val onStateChanged: (appBarLayout: AppBarLayout, state: State) -> Unit
 ) : AppBarLayout.OnOffsetChangedListener {
 
-  companion object {
-    const val EXPANDED = 101
-    const val COLLAPSED = 79
-    const val IDLE = 104
+  enum class State {
+    EXPANDED, COLLAPSED, IDLE
   }
 
-  private var mCurrentState = IDLE
-
-  fun getCurrentState(): Int = mCurrentState
+  var currentState: State = IDLE
+    private set
 
   override fun onOffsetChanged(appBarLayout: AppBarLayout, i: Int) {
     when {
       i == 0 -> {
-        if (mCurrentState != EXPANDED) {
+        if (currentState != EXPANDED) {
           onStateChanged(appBarLayout, EXPANDED)
         }
-        mCurrentState = EXPANDED
+        currentState = EXPANDED
       }
-      Math.abs(i) >= appBarLayout.totalScrollRange -> {
-        if (mCurrentState != COLLAPSED) {
+      abs(i) >= appBarLayout.totalScrollRange -> {
+        if (currentState != COLLAPSED) {
           onStateChanged(appBarLayout, COLLAPSED)
         }
-        mCurrentState = COLLAPSED
+        currentState = COLLAPSED
       }
       else -> {
-        if (mCurrentState != IDLE) {
+        if (currentState != IDLE) {
           onStateChanged(appBarLayout, IDLE)
         }
-        mCurrentState = IDLE
+        currentState = IDLE
       }
     }
   }

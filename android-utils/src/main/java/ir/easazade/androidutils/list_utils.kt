@@ -5,7 +5,7 @@ package ir.easazade.androidutils
 import java.util.Stack
 
 /**
- * returns the page items of the given page based on the page number and count of items in each page
+ * @returns the page items of the given page based on the page number and count of items in each page
  */
 fun <T> MutableList<T>._getPagination(page: Int, count: Int): MutableList<T> {
   val from = count * (if (page < 1) 0 else (page - 1))
@@ -56,35 +56,35 @@ fun <T> _compareLists(
   return Pair(firstListDifferences, secondListDifferences)
 }
 
-fun <T> MutableList<T>._removeIf(predicate: (T) -> Boolean): List<Int> {
-  val indexes = Stack<Int>()
-  forEach {
-    if (predicate(it))
-      indexes.add(indexOf(it))
-  }
-  val copiedIndexes = mutableListOf<Int>()
-  copiedIndexes.addAll(indexes)
-  while (indexes.isNotEmpty()) {
-    val index = indexes.pop()
-    removeAt(index)
-  }
-  return copiedIndexes
-}
-
-fun <T> _removeIfMatch(
-  list: MutableList<T>,
-  matchingItems: List<T>,
-  predicate: (listItem: T, matchingItem: T) -> Boolean
-): List<Int> {
-  return list._removeIf { listItem ->
-    var flag = false
-    matchingItems.forEach { matchingItem ->
-      if (predicate(listItem, matchingItem))
-        flag = true
-    }
-    flag
-  }
-}
+///**
+// * removes items that matches the predicate and returns the
+// */
+//private fun <T> MutableList<T>._removeIf(predicate: (T) -> Boolean): List<Int> {
+//  val indexes = Stack<Int>()
+//  forEach {
+//    if (predicate(it))
+//      indexes.add(indexOf(it))
+//  }
+//  val copiedIndexes = mutableListOf<Int>()
+//  copiedIndexes.addAll(indexes)
+//  while (indexes.isNotEmpty()) {
+//    val index = indexes.pop()
+//    removeAt(index)
+//  }
+//  return copiedIndexes
+//}
+//
+//fun <T> MutableList<T>.hasMatchingItems(
+//  matchingItems: List<T>,
+//  predicate: (listItem: T, matchingItem: T) -> Boolean
+//): List<Int> = _removeIf { listItem ->
+//  var flag = false
+//  matchingItems.forEach { matchingItem ->
+//    if (predicate(listItem, matchingItem))
+//      flag = true
+//  }
+//  flag
+//}
 
 /***
  * add items to the list from newItems if they do not match the predicate with any items in list
@@ -112,7 +112,8 @@ fun <T> MutableList<T>._addAllIfNotExists(
 }
 
 /***
- * add items to the list from newItems if they do not match the predicate with any items in list
+ * add items to the list from newItems if they do not with any items in list (don't already exists)
+ * and if they exists they will be replaced by the newer version from newItems list
  * @return list of indexes from newItems list that were added to the list or replaced another item in list
  */
 fun <T> MutableList<T>._addOrUpdateAll(
@@ -149,6 +150,9 @@ fun <T> MutableList<T>._addOrUpdateAll(
   return addedItemsIndexes
 }
 
+/**
+ * checks if any item in the list matches our parameter item using predicate to find a match
+ */
 fun <T> MutableList<T>._contains(
   item: T,
   matchingPredicate: (t1: T, t2: T) -> Boolean

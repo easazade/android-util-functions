@@ -5,16 +5,16 @@ import android.content.res.Configuration
 import android.os.Build
 import java.util.Locale
 
-class ForcePersionLocaleContextWrapper {
+class ForceLocaleContextWrapper {
 
   companion object {
-    fun wrap(base: Context?): Context? {
+    fun wrap(base: Context?, lang: String = "en"): Context? {
       var context: Context? = base
       //this is the source
       //https://proandroiddev.com/change-language-programmatically-at-runtime-on-android-5e6bc15c758
       //setFab fixed locale
       //since this app has only one language
-      val locale = Locale("fa")
+      val locale = Locale(lang)
       Locale.setDefault(locale) //not sure about this line
       val config = Configuration()
       when {
