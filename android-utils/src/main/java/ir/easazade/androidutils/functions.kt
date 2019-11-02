@@ -1,12 +1,20 @@
+@file:Suppress("FunctionName")
+
 package ir.easazade.androidutils
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface
 import android.net.Uri
+import android.util.DisplayMetrics
+import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
 import timber.log.Timber
 import java.sql.Timestamp
 import java.util.Calendar
 import java.util.GregorianCalendar
+import kotlin.random.Random
 
 /***
  * @return a new instance of pair object just like using Pair(t,n)
@@ -59,4 +67,35 @@ fun _callNumber(activity: FragmentActivity, number: String) {
   } catch (e: Exception) {
     Timber.e(e)
   }
+}
+
+/**
+ * @return a random Long number between given min and max
+ */
+fun _randomNumber(min: Long = 0, max: Long = 100) =
+  Random(System.currentTimeMillis()).nextLong(min, max)
+
+/**
+ * launches a browser and opens with the given url
+ * checks for the url validity first
+ */
+fun _launchBrowserAndOpenUrl(activity: FragmentActivity, url: String) {
+  if (url.isNotEmpty()) {
+    if (url.startsWith("www")) {
+      val fixUrl = "https://$url"
+      val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(fixUrl))
+      activity.startActivity(browserIntent)
+    } else if (url.startsWith("https://") || url.startsWith("http://")) {
+      val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+      activity.startActivity(browserIntent)
+    }
+  }
+}
+
+fun _px2dp(px: Float, context: Context): Float {
+  return px / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+}
+
+fun _dp2px(dp: Float, context: Context): Float {
+  return dp * (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 }

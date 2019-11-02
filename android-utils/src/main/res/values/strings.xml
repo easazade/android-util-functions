@@ -1,3 +1,5 @@
 <resources>
   <string name="app_name">android-utils</string>
+  <string name="location_not_active">accessing device location</string>
+  <string name="enable_location_high_accuracy">application needs to access your device location please grant access and make sure you set it on high accuracy mode</string>
 </resources>

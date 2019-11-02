@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">android-utils</string>
+  <string name="location_not_active">دسترسی به موقعیت دستگاه</string>
+  <string name="enable_location_high_accuracy">اپلیکیشن به دسترسی به موقعیت دستگاه نیاز دارد. با ورورد به صفحه تنظیمات دسترسی را صادر کنید و حالت موقعیت یابی را روی دقت بالا تنظیم کنید</string>
+</resources>
