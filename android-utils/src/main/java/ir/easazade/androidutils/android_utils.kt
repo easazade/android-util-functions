@@ -13,11 +13,15 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.provider.Settings
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.snackbar.Snackbar
+import io.reactivex.disposables.CompositeDisposable
+import ir.easazade.androidutils.classes.slider.ImageSliderBehavior
+import ir.easazade.androidutils.classes.slider.SliderViewPager
 import timber.log.Timber
 
 fun _convertImplicitIntentToExplicitIntent(pm: PackageManager, implicitIntent: Intent): Intent? {
@@ -175,4 +179,15 @@ fun _isConnected(context: Context): Boolean {
   val connectivityManager =
     context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
   return connectivityManager.activeNetworkInfo != null && connectivityManager.activeNetworkInfo.isConnected
+}
+
+/**
+ * initiates an sliderViewPager
+ */
+fun SliderViewPager.setImageSlider(
+  subscriptions: CompositeDisposable,
+  imageUrls: List<String>,
+  loadImage: (String, ImageView) -> Unit
+) {
+  ImageSliderBehavior(subscriptions, this, imageUrls,loadImage)
 }
