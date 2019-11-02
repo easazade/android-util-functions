@@ -24,7 +24,7 @@ import ir.easazade.androidutils.classes.slider.ImageSliderBehavior
 import ir.easazade.androidutils.classes.slider.SliderViewPager
 import timber.log.Timber
 
-fun _convertImplicitIntentToExplicitIntent(pm: PackageManager, implicitIntent: Intent): Intent? {
+fun _convertImplicitIntentToExplicit(pm: PackageManager, implicitIntent: Intent): Intent? {
   val resolveInfoList = pm.queryIntentServices(implicitIntent, 0)
   if (resolveInfoList == null || resolveInfoList.size != 1) {
     return null
@@ -173,7 +173,7 @@ fun _showSnackBarMessage(
 }
 
 /**
- * checks if device is connected
+ * checks for device's connectivity
  */
 fun _isConnected(context: Context): Boolean {
   val connectivityManager =
