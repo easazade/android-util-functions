@@ -2,13 +2,15 @@
 
 package ir.easazade.androidutils
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Typeface
+import android.content.pm.ActivityInfo
+import android.graphics.Point
 import android.net.Uri
+import android.os.Build
+import android.os.StrictMode
 import android.util.DisplayMetrics
-import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
 import timber.log.Timber
 import java.sql.Timestamp
@@ -105,3 +107,49 @@ fun _px2dp(px: Float, context: Context): Float {
 fun _dp2px(dp: Float, context: Context): Float {
   return dp * (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 }
+
+/**
+ * generates a random name with the given length
+ */
+fun _generateRandomName(length: Int = 9): String {
+  val rand = java.util.Random()
+  val letters = arrayOf(
+    "a", "b", "c", "d", "e", "d", "g", "h", "i",
+    "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y",
+    "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "P", "Q",
+    "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9"
+  )
+
+  var randomName = ""
+  for (i in 0..length) {
+    val x = rand.nextInt(60)
+    randomName += letters[x]
+  }
+
+  return randomName
+}
+
+/**
+ * Enable strict mode.
+ *
+ * @param enable the enable flag
+ */
+fun _enableStrictMode(enable: Boolean) {
+  if (enable) {
+    StrictMode.setThreadPolicy(
+      StrictMode.ThreadPolicy.Builder().detectDiskReads()
+        .detectDiskWrites()
+        .detectNetwork()   // or .detectAll() for all detectable problems
+        .penaltyLog()
+        .build()
+    )
+    StrictMode.setVmPolicy(
+      StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects()
+        .detectLeakedClosableObjects()
+        .penaltyLog()
+        .penaltyDeath()
+        .build()
+    )
+  }
+}
+

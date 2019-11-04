@@ -3,6 +3,7 @@ package ir.easazade.androidutils
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Point
 import android.graphics.Typeface
 import android.util.Patterns
 import android.view.inputmethod.InputMethodManager
@@ -131,3 +132,17 @@ fun String._nullIfBlank() = if (this.isNotBlank()) this else null
 fun String._isValidEmailAddress() = isNotBlank().and(Patterns.EMAIL_ADDRESS.matcher(this).matches())
 
 fun String._isValidUrl() = isNotBlank().and(Patterns.WEB_URL.matcher(this).matches())
+
+/**
+ * Get the screen dimensions
+ *
+ * @param activity the activity
+ * @return the int [width, height]
+ */
+fun FragmentActivity._getScreenSize(): IntArray {
+  val size = Point()
+  val w = windowManager
+
+  w.defaultDisplay.getSize(size)
+  return intArrayOf(size.x, size.y)
+}
