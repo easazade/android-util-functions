@@ -35,4 +35,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation project(":android-utils")
 //    implementation 'com.github.easazade:android-util-functions:1.1.0'
+//    implementation 'com.github.easazade:android-util-functions:master-SNAPSHOT' //using snapshot of master branch could be other branches snapshot
+//    implementation 'com.github.easazade:android-util-functions:00ed6b6b9d5eab20acef7397faea5f2e85740d42-SNAPSHOT' //using commit hash as version
+
 }

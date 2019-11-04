@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import ir.easazade.androidutils._generateRandomName
 import ir.easazade.androidutils.bind
 import ir.easazade.androidutils.localNumbers
 import kotlinx.android.synthetic.main.activity_main.helloworldText
