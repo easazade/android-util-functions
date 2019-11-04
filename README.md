@@ -99,7 +99,7 @@ dependencies {
 abstract class BaseActivity : AppCompatActivity() {   
   
   override fun attachBaseContext(newBase: Context?) {    
-    super.attachBaseContext(ForceFarsiLocaleContextWrapper.wrap(newBase))    
+    super.attachBaseContext(ForceFarsiLocaleContextWrapper.wrap(newBase,"en"))
   }    
   //rest of the code  
 }  
