@@ -8,11 +8,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import ir.easazade.androidutils.R
-import ir.easazade.androidutils.recyclerview.ListState.FAILED
-import ir.easazade.androidutils.recyclerview.ListState.LOADED
-import ir.easazade.androidutils.recyclerview.ListState.LOADING
+import ir.easazade.androidutils.recyclerview.EndLessRecyclerAdapter.State.FAILED
+import ir.easazade.androidutils.recyclerview.EndLessRecyclerAdapter.State.LOADED
+import ir.easazade.androidutils.recyclerview.EndLessRecyclerAdapter.State.LOADING
 import timber.log.Timber
-
 
 //TODO documents are needed for this class
 /**
@@ -21,8 +20,7 @@ import timber.log.Timber
  */
 class EndLessRecyclerAdapter<ITEM : Any, ITEMID : Any>(
   private val recyclerView: RecyclerView,
-  val items: MutableList<ITEM>,
-  val listState: RecyclerViewState? = null,
+  private val listState: ListState<ITEM>,
   private val getItemId: (ITEM) -> ITEMID,
   var currentPage: Int,
   private val getNextPageItems: (page: Int) -> Unit,
@@ -42,12 +40,20 @@ class EndLessRecyclerAdapter<ITEM : Any, ITEMID : Any>(
     const val FAILED_ITEM_VIEW_TYPE = 79
   }
 
-  private var mNetworkState: ListState? = if (items.isNotEmpty()) LOADED else null
+  private enum class State { LOADING, LOADED, FAILED }
+
+  private var mNetworkState: State? = if (listState.items.isNotEmpty()) LOADED else null
   private var totalItemCount = 0
   private var lastVisibleItem = 0
   private var isEndOfList = false
   private var alreadyRequestedForMoreItems = false
   private val mViewHolders = mutableListOf<ViewHolder>()
+
+  fun getListState() = listState
+
+  fun updateList(listState: ListState<ITEM>) {
+
+  }
 
   init {
     //load more designItems when list reaches bottom
@@ -108,23 +114,23 @@ class EndLessRecyclerAdapter<ITEM : Any, ITEMID : Any>(
       is FailedViewHolder -> {
       }
       else -> {
-        bindToViewHolder(holder, items[position], position)
+        bindToViewHolder(holder, listState.items[position], position)
         holder.itemView.setOnClickListener {
-          onClick(items[holder.adapterPosition])
+          onClick(listState.items[holder.adapterPosition])
         }
       }
     }
   }
 
-  override fun getItemCount(): Int = items.size + if (hasExtraRow()) 1 else 0
+  override fun getItemCount(): Int = listState.items.size + if (hasExtraRow()) 1 else 0
 
   private fun hasExtraRow(): Boolean = mNetworkState != null && mNetworkState != LOADED
 
   fun addMoreItems(newList: List<ITEM>) {
     if (currentPage != askedPage) currentPage = askedPage
     alreadyRequestedForMoreItems = false
-    val position = items.size
-    items.addAll(newList)
+    val position = listState.items.size
+    listState.items.addAll(newList)
     notifyItemInserted(position)
     setState(LOADED)
   }
@@ -145,14 +151,14 @@ class EndLessRecyclerAdapter<ITEM : Any, ITEMID : Any>(
 
   fun updateItem(newItem: ITEM) {
     var index = -1
-    items.forEach { listItem ->
+    listState.items.forEach { listItem ->
       if (getItemId(newItem) == getItemId(listItem)) {
-        index = items.indexOf(listItem)
+        index = listState.items.indexOf(listItem)
       }
     }
     if (index != -1) {
-      items.removeAt(index)
-      items.add(index, newItem)
+      listState.items.removeAt(index)
+      listState.items.add(index, newItem)
       recyclerView.post {
         notifyItemChanged(index)
       }
@@ -164,13 +170,13 @@ class EndLessRecyclerAdapter<ITEM : Any, ITEMID : Any>(
    */
   fun removeItem(itemId: ITEMID): Int {
     var index = -1
-    items.forEach { listItem ->
+    listState.items.forEach { listItem ->
       if (itemId == getItemId(listItem)) {
-        index = items.indexOf(listItem)
+        index = listState.items.indexOf(listItem)
       }
     }
     if (index != -1) {
-      items.removeAt(index)
+      listState.items.removeAt(index)
       recyclerView.post {
         notifyItemRemoved(index)
       }
@@ -179,7 +185,7 @@ class EndLessRecyclerAdapter<ITEM : Any, ITEMID : Any>(
   }
 
   fun addItemAtPosition(item: ITEM, position: Int) {
-    items.add(position, item)
+    listState.items.add(position, item)
     recyclerView.post { notifyItemInserted(position) }
   }
 
@@ -201,20 +207,20 @@ class EndLessRecyclerAdapter<ITEM : Any, ITEMID : Any>(
 
     if (newItem != null) {
       var index = -1
-      items.forEach { listItem ->
+      listState.items.forEach { listItem ->
         if (getItemId(newItem) == getItemId(listItem))
-          index = items.indexOf(listItem)
+          index = listState.items.indexOf(listItem)
       }
       if (index != -1) {
-        items.removeAt(index)
-        items.add(index, newItem)
+        listState.items.removeAt(index)
+        listState.items.add(index, newItem)
         recyclerView.post {
           updateView(index)
         }
       }
     } else {
-      for (i in 0 until items.size) {
-        if (getItemId(items[i]) == itemId)
+      for (i in 0 until listState.items.size) {
+        if (getItemId(listState.items[i]) == itemId)
           recyclerView.post {
             updateView(i)
           }
@@ -223,25 +229,25 @@ class EndLessRecyclerAdapter<ITEM : Any, ITEMID : Any>(
   }
 
   fun refreshItemWithId(itemId: ITEMID) {
-    for (i in 0 until items.size) {
-      if (getItemId(items[i]) == itemId)
+    for (i in 0 until listState.items.size) {
+      if (getItemId(listState.items[i]) == itemId)
         notifyItemChanged(i)
     }
   }
 
-  private fun setState(newNetworkState: ListState?) {
+  private fun setState(newNetworkState: State?) {
     Timber.d(newNetworkState.toString())
     newNetworkState?.let {
-      if (items.isNotEmpty()) {
+      if (listState.items.isNotEmpty()) {
         val previousState = this.mNetworkState
         val hadExtraRow = hasExtraRow()
         this.mNetworkState = newNetworkState
         val hasExtraRow = hasExtraRow()
         if (hadExtraRow != hasExtraRow) {
           if (hadExtraRow) {
-            recyclerView.post { notifyItemRemoved(items.size) }
+            recyclerView.post { notifyItemRemoved(listState.items.size) }
           } else {
-            recyclerView.post { notifyItemInserted(items.size) }
+            recyclerView.post { notifyItemInserted(listState.items.size) }
           }
         } else if (hasExtraRow && previousState !== newNetworkState) {
           recyclerView.post { notifyItemChanged(itemCount - 1) }

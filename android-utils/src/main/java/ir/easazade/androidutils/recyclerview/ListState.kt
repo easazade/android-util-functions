@@ -1,3 +1,7 @@
 package ir.easazade.androidutils.recyclerview
 
-enum class ListState { LOADING, LOADED, FAILED }
+data class ListState<ITEM>(
+  val items: MutableList<ITEM>,
+  val page: Int,
+  val verticalOffset: Int?
+)
