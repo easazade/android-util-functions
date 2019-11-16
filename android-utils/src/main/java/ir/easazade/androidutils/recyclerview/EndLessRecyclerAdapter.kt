@@ -13,6 +13,12 @@ import ir.easazade.androidutils.recyclerview.ListState.LOADED
 import ir.easazade.androidutils.recyclerview.ListState.LOADING
 import timber.log.Timber
 
+
+//TODO documents are needed for this class
+/**
+ * this class is a helper class to create an endless recyclerAdapter with ability to add items
+ * remove item, show end of list, show loading progress
+ */
 class EndLessRecyclerAdapter<ITEM : Any, ITEMID : Any>(
   private val recyclerView: RecyclerView,
   val items: MutableList<ITEM>,
