@@ -22,7 +22,6 @@ class EndLessRecyclerAdapter<ITEM : Any, ITEMID : Any>(
   private val recyclerView: RecyclerView,
   private val listState: ListState<ITEM>,
   private val getItemId: (ITEM) -> ITEMID,
-  var currentPage: Int,
   private val getNextPageItems: (page: Int) -> Unit,
   private val onClick: (ITEM) -> Unit,
   private val createNewViewHolder: (parent: ViewGroup, viewType: Int) -> ViewHolder,
@@ -32,6 +31,7 @@ class EndLessRecyclerAdapter<ITEM : Any, ITEMID : Any>(
   @LayoutRes private val failedLayoutId: Int = R.layout.endliess_liest_item_failed
 ) : RecyclerView.Adapter<ViewHolder>() {
 
+  private var currentPage = listState.page
   private var askedPage = currentPage
 
   companion object {
