@@ -2,13 +2,9 @@
 
 package ir.easazade.androidutils
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
-import android.graphics.Point
 import android.net.Uri
-import android.os.Build
 import android.os.StrictMode
 import android.util.DisplayMetrics
 import androidx.fragment.app.FragmentActivity
@@ -76,6 +72,25 @@ fun _callNumber(activity: FragmentActivity, number: String) {
  */
 fun _randomNumber(min: Long = 0, max: Long = 100) =
   Random(System.currentTimeMillis()).nextLong(min, max)
+
+val lettersAndNumbers = listOf(
+  'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v'
+  , 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'
+)
+
+/**
+ * TODO add docs to README.md
+ * @return a generated random String from numbers and letters
+ */
+fun _randomString(length: Int = 10): String {
+  val builder = StringBuilder()
+  val random = Random(System.currentTimeMillis())
+  for (i in 0 until length) {
+    val index = random.nextInt(lettersAndNumbers.size - 1)
+    builder.append(lettersAndNumbers[index])
+  }
+  return builder.toString()
+}
 
 /**
  * launches a browser and opens with the given url
