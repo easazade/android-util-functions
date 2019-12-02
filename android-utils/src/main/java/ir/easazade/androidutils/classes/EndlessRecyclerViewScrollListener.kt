@@ -10,7 +10,8 @@ class EndlessRecyclerViewScrollListener(
   private val layoutManager: RecyclerView.LayoutManager,
   private var visibleThreshold: Int,
   private val onLoadMore: (page: Int) -> Unit,
-  private val isShowingLoadMoreViewAndListIsNotEmpty: () -> Boolean
+  private val isShowingLoadMore: () -> Boolean,
+  private val isShowingSkeletonItems: () -> Boolean
 ) : RecyclerView.OnScrollListener() {
 
   private var currentPage = 0
@@ -28,7 +29,7 @@ class EndlessRecyclerViewScrollListener(
 
   override fun onScrolled(view: RecyclerView, dx: Int, dy: Int) {
     /**
-     * isShowingLoadMoreViewAndListIsNotEmpty()
+     * isShowingLoadMore()
      * the purpose of this function is to fix the mistake our first if statement
      * because our first if always misscalculates that wh
      */
@@ -42,7 +43,12 @@ class EndlessRecyclerViewScrollListener(
     }
 
     //calculate to ask to load more if needed
-    if (!loadingMore && lastVisibleItemPosition + visibleThreshold > totalItemCount && !isShowingLoadMoreViewAndListIsNotEmpty()) {
+    if (
+      !loadingMore
+      && lastVisibleItemPosition + visibleThreshold > totalItemCount
+      && !isShowingLoadMore()
+      && !isShowingSkeletonItems()
+    ) {
       loadingMore = true
       currentPage++
       onLoadMore(currentPage)
